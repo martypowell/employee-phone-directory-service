@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  employeephonedirectoryservice:
+    image: employeephonedirectoryservice
+    build:
+      context: .
+      dockerfile: EmployeePhoneDirectoryService\Dockerfile
