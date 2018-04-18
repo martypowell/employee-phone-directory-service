@@ -20,9 +20,22 @@ namespace EmployeePhoneDirectoryService.Controllers
         }
         // GET: api/Listings
         [HttpGet]
-        public IEnumerable<PhoneDirectoryEmployeeEntry> Get()
+        public PagedResultsModel<PhoneDirectoryEmployeeEntry> Get(int? page = null, int pageSize = 10)
         {
-            return phoneDirectoryService.Get();
+            var listings = phoneDirectoryService.Get();
+            double numberOfPages = (double)listings.Count() / (double)pageSize;
+            int currentPage = page ?? 1;
+
+            var pagedResult = new PagedResultsModel<PhoneDirectoryEmployeeEntry>()
+            {
+                PageNumber = page ?? 1,
+                PageSize = pageSize,
+                NextPageUrl = $"api/listings?page={currentPage}&pageSize={pageSize}",
+                TotalNumberOfPages = (int)Math.Ceiling(numberOfPages),
+                TotalNumberOfRecords = listings.Count(),
+                Results = listings.Take(pageSize)
+            };
+            return pagedResult;
         }
 
         // GET: api/Listings/5
